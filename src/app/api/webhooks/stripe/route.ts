@@ -9,7 +9,6 @@ export async function POST(req: Request) {
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
   if (!signature || !webhookSecret) {
-    console.error("Missing stripe-signature or STRIPE_WEBHOOK_SECRET");
     return NextResponse.json(
       { error: "Missing webhook signature or secret" },
       { status: 400 }
@@ -21,7 +20,6 @@ export async function POST(req: Request) {
   try {
     event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
   } catch (err: any) {
-    console.error(`Webhook Signature Verification Failed: ${err.message}`);
     return NextResponse.json(
       { error: `Webhook Error: ${err.message}` },
       { status: 400 }
@@ -46,7 +44,6 @@ export async function POST(req: Request) {
         .maybeSingle();
 
       if (existingOrder) {
-        console.log(`Order already processed for payment intent ${paymentIntentId}`);
         return NextResponse.json({ received: true });
       }
 
@@ -113,10 +110,6 @@ export async function POST(req: Request) {
 
       // 4. Handle Oversold Race Condition -> Automatic Refund Safety Net
       if (isOversold) {
-        console.warn(
-          `Oversold condition detected for PaymentIntent ${paymentIntentId}. Initiating automatic Stripe refund...`
-        );
-
         // Issue full refund via Stripe API
         if (session.payment_intent && typeof session.payment_intent === "string") {
           await stripe.refunds.create({
@@ -158,11 +151,9 @@ export async function POST(req: Request) {
       if (orderError || !order) {
         // Handle postgres unique constraint race condition gracefully (PostgreSQL 23505)
         if (orderError?.code === "23505") {
-          console.log(`Concurrent order creation prevented by UNIQUE constraint for ${paymentIntentId}`);
           return NextResponse.json({ received: true });
         }
 
-        console.error("Failed to insert order into DB:", orderError);
         return NextResponse.json(
           { error: `Database Order Insert Error: ${orderError?.message}` },
           { status: 500 }
@@ -184,10 +175,6 @@ export async function POST(req: Request) {
           .from("order_items")
           .insert(orderItemsToInsert);
 
-        if (itemsError) {
-          console.error("Failed to insert order items into DB:", itemsError);
-        }
-
         // Call atomic RPC function for each product (Conditional SQL Update)
         for (const item of catalogItems) {
           const { data: decrementSuccess, error: rpcErr } =
@@ -197,10 +184,6 @@ export async function POST(req: Request) {
             });
 
           if (rpcErr || decrementSuccess === false) {
-            console.warn(
-              `Atomic stock decrement failed for product ${item.productId} in order ${order.id}. Microsecond race detected, initiating refund...`
-            );
-
             if (
               session.payment_intent &&
               typeof session.payment_intent === "string"
@@ -228,10 +211,7 @@ export async function POST(req: Request) {
           }
         }
       }
-
-      console.log(`Order ${order.id} successfully fulfilled via Stripe Webhook!`);
     } catch (err: any) {
-      console.error("Error fulfilling order in webhook:", err);
       return NextResponse.json(
         { error: `Webhook Fulfillment Error: ${err.message}` },
         { status: 500 }

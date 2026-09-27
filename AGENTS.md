@@ -782,4 +782,28 @@ Did I test by dragging, not jumping? → Must: yes
 Does any input have font-size < 16px? → Must: no
 ```
 
+---
+
+## PART 12 — ERROR HANDLING & RESILIENCE RULES
+
+### 12.1 Expected Errors vs Uncaught Exceptions
+- **Expected Errors (Server Actions, Forms, Queries)**:
+  - Never throw raw unhandled errors for expected operational conditions (e.g. invalid inputs, out-of-stock, auth failures).
+  - Model expected errors as structured return objects: `{ success: false, error: "Human readable message" }`.
+  - Display expected error messages directly in the UI (e.g. inline form helper text or toast notifications).
+- **Uncaught Exceptions (Rendering Crashes)**:
+  - Handled via Next.js `error.tsx` Client Component Error Boundaries at route group levels (`(customer)`, `admin`).
+  - Must provide a user recovery action (invoking `reset()` or `retry()`).
+- **Root Layout Failures**:
+  - Handled via `global-error.tsx` at `src/app/global-error.tsx`. Must include root `<html>` and `<body>` tags.
+
+### 12.2 UI & UX Rules for Error Fallbacks
+- All error boundaries (`error.tsx`, `global-error.tsx`) must follow system design tokens (OKLCH palette, clean card surface, brand button hierarchy).
+- Interactive buttons in error fallbacks must strictly enforce `cursor-default` styling (never use `cursor-pointer`).
+- Always provide a way to recover (e.g. "Try Again" calling `reset()`) and a escape route (e.g. "Go to Home" link).
+
+### 12.3 Resource Validation & Not-Found Rules
+- **Dynamic Route Resource Verification**: In dynamic routes (`[slug]`, `[id]`), if a queried resource (product, category, order) is null or missing, immediately invoke `notFound()` from `next/navigation`.
+- **404 Fallback UI**: 404 pages (`not-found.tsx`) must provide a branded, clear explanation of the missing resource, helpful escape routes (e.g. "Back to Home", "Explore Products", "Back to Dashboard"), and strictly enforce `cursor-default` on all interactive controls.
+
 <!-- END:design-rules -->

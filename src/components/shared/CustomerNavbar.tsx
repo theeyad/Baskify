@@ -21,7 +21,6 @@ export default function CustomerNavbar() {
     setMounted(true);
     const supabase = createClient();
 
-
     const fetchUserAndRole = async (authUser: SupabaseUser | null) => {
       setUser(authUser);
       if (authUser) {
@@ -96,24 +95,26 @@ export default function CustomerNavbar() {
             </Link>
           )}
 
-          {/* Cart Icon */}
-          <Link
-            href="/cart"
-            className="relative p-2 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors cursor-default"
-            title="Shopping Cart"
-          >
-            <ShoppingBag className="w-5 h-5" />
-            {mounted && totalItems > 0 && (
-              <span className="absolute top-1 right-1 bg-primary text-primary-foreground text-[10px] font-bold min-w-4 h-4 px-1 rounded-full flex items-center justify-center animate-in zoom-in-50 duration-200">
-                {totalItems > 99 ? "99+" : totalItems}
-              </span>
-            )}
-            {!mounted && (
-              <span className="absolute top-1 right-1 bg-primary text-primary-foreground text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
-                0
-              </span>
-            )}
-          </Link>
+          {/* Cart Icon for customers only (admins should not buy) */}
+          {!isAdmin && (
+            <Link
+              href="/cart"
+              className="relative p-2 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors cursor-default"
+              title="Shopping Cart"
+            >
+              <ShoppingBag className="w-5 h-5" />
+              {mounted && totalItems > 0 && (
+                <span className="absolute top-1 right-1 bg-primary text-primary-foreground text-[10px] font-bold min-w-4 h-4 px-1 rounded-full flex items-center justify-center animate-in zoom-in-50 duration-200">
+                  {totalItems > 99 ? "99+" : totalItems}
+                </span>
+              )}
+              {!mounted && (
+                <span className="absolute top-1 right-1 bg-primary text-primary-foreground text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                  0
+                </span>
+              )}
+            </Link>
+          )}
 
           {/* Auth Button / Profile */}
           {user ? (
@@ -148,4 +149,3 @@ export default function CustomerNavbar() {
     </header>
   );
 }
-

@@ -154,7 +154,6 @@ export async function createCheckoutSession(
 
     return { success: true, url: session.url };
   } catch (error: any) {
-    console.error("Error creating Stripe checkout session:", error);
     return {
       success: false,
       error: error?.message || "Something went wrong creating checkout session.",
