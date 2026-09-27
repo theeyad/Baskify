@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { ProfileViewCard } from "@/components/shared/ProfileViewCard";
-import { profileType } from "@/lib/validation/types";
+import { profileType, orderType } from "@/lib/validation/types";
 
 export default async function CustomerProfilePage() {
   const supabase = await createClient();
@@ -41,7 +41,7 @@ export default async function CustomerProfilePage() {
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <ProfileViewCard
         profile={fullProfile}
-        orders={(userOrders as any) || []}
+        orders={(userOrders as orderType[]) || []}
         isAdminView={false}
       />
     </div>
