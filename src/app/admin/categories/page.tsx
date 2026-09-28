@@ -22,7 +22,7 @@ export default async function AdminCategoriesPage() {
   return (
     <>
       <div className="flex items-center justify-between">
-        <h2 className="text-xl">Categories Page</h2>
+        <h2 className="text-xl font-semibold">Categories Page</h2>
         <Link href="/admin/categories/new">
           <Button size="sm">Add Category</Button>
         </Link>

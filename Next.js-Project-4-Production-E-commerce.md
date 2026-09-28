@@ -923,7 +923,7 @@ Build in this order — each phase is testable before moving to the next:
 6. **Cart** — Zustand store, cart page, cart drawer -> Done
 7. **Checkout + Stripe** — form, PaymentIntent, success page -> Done
 8. **Stripe webhook** — order status update, stock decrement -> Done
-9. **Order history** — customer orders page + detail
+9. **Order history** — customer orders page + detail -> Done
 10. **Admin — Orders** — view all orders, update status
 11. **Admin — Dashboard** — stats overview
 12. **GSAP animations** — add last, after all functionality works

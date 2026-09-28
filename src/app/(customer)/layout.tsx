@@ -1,5 +1,6 @@
 import CustomerNavbar from "@/components/shared/CustomerNavbar";
 import CustomerFooter from "@/components/shared/CustomerFooter";
+import EmailVerificationModal from "@/components/shared/EmailVerificationModal";
 
 export default function CustomerLayout({
   children,
@@ -11,6 +12,7 @@ export default function CustomerLayout({
       <CustomerNavbar />
       <main className="flex-1">{children}</main>
       <CustomerFooter />
+      <EmailVerificationModal />
     </div>
   );
 }

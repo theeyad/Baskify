@@ -5,7 +5,7 @@
 ### Supabase Auth Rate Limiting
 
 - **The Problem:** Supabase default email provider limits outgoing authentication emails to **2 emails per hour** per project. This restricted efficient development testing and posed a critical bottleneck for production scalability.
-- **The Solution:** Integrated **Resend** as a custom SMTP provider. This expanded the capacity to **100 emails per day for free**, allowing the Supabase rate limit configuration to be safely increased to 100 emails per hour to resolve the testing and production bottleneck.
+- **The Solution:** Integrated **Resend** as a custom SMTP provider. This expanded the capacity to **100 emails per day for free**, allowing the Supabase rate limit configuration to be safely increased to 100 emails per hour to resolve the testing and production bottleneck. however this only worked with the email I used to make account on resend and when I tried to create an account with another email it failed cause resend needs a real website domain to send to any email. so after a bit of searching I found that using my Gmail address as SMTP will work and even give me nearly **300 emails per day for free** and allow sending confirmation emails to anyone.
 
 ### Image Upload Handler
 
@@ -22,9 +22,9 @@
 ### Race Conditions
 
 - **The Problem:** In concurrent high-traffic scenarios (e.g. flash sales or concurrent Stripe webhooks), three potential race conditions could occur:
-  1. *Lost Update Stock Decrement:* JavaScript read-then-write updates (`stock - quantity`) on simultaneous webhooks cause lost stock updates.
-  2. *Duplicate Webhook Processing:* Concurrent Stripe webhook deliveries for the same payment intent can cause duplicate order records to be inserted into the database.
-  3. *Overselling at Checkout:* Multiple users completing checkout for the last unit in stock at the exact same millisecond.
+  1. _Lost Update Stock Decrement:_ JavaScript read-then-write updates (`stock - quantity`) on simultaneous webhooks cause lost stock updates.
+  2. _Duplicate Webhook Processing:_ Concurrent Stripe webhook deliveries for the same payment intent can cause duplicate order records to be inserted into the database.
+  3. _Overselling at Checkout:_ Multiple users completing checkout for the last unit in stock at the exact same millisecond.
 - **The Solution:** Implemented a multi-layered defense system:
   - **Database Level:** Added a PostgreSQL `UNIQUE (stripe_payment_intent_id)` constraint on the `orders` table to enforce idempotency at the database engine level, and created an atomic PostgreSQL RPC function (`decrement_product_stock`) to perform thread-safe inventory decrements directly in SQL.
   - **Pre-Checkout Audit:** Added server-side inventory verification in `src/actions/checkout.ts` before creating Stripe checkout sessions.

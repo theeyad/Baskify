@@ -21,7 +21,7 @@ export async function signUp(values: FieldValues) {
 
   if (error) return { error: error.message };
 
-  redirect("/");
+  redirect("/?verified=pending");
 }
 
 export async function signIn(values: FieldValues) {
