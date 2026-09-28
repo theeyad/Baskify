@@ -261,3 +261,21 @@ export async function updateProduct(id: string, values: FieldValues) {
   revalidatePath("/");
   return { success: true };
 }
+
+// Orders
+
+export async function updateOrderStatus(orderId: string, status: string) {
+  const supabase = await createClient();
+
+  const { error } = await supabase
+    .from("orders")
+    .update({ status, updated_at: new Date().toISOString() })
+    .eq("id", orderId);
+
+  if (error) return { error: error.message };
+
+  revalidatePath("/admin/orders");
+  revalidatePath("/orders");
+  return { success: true };
+}
+

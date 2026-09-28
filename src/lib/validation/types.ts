@@ -80,4 +80,51 @@ export type orderType = {
   order_items?: orderItemType[];
 };
 
+export interface OrderShippingAddress {
+  fullName?: string;
+  addressLine1?: string;
+  city?: string;
+  postalCode?: string;
+  country?: string;
+}
+
+export interface AdminOrder {
+  id: string;
+  user_id: string | null;
+  status: string;
+  total_amount: number;
+  stripe_payment_intent_id: string | null;
+  shipping_address: OrderShippingAddress | null;
+  created_at: string;
+  updated_at: string;
+  order_items: orderItemType[];
+}
+
+export interface ProfileMap {
+  [userId: string]: {
+    full_name: string | null;
+  };
+}
+
+export interface AdminOrdersComponentProps {
+  orders: AdminOrder[];
+  profiles: ProfileMap;
+}
+
+export interface AdminOrdersTableProps {
+  orders: AdminOrder[];
+  profiles: ProfileMap;
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
+  statusFilter: string;
+  setStatusFilter: (filter: string) => void;
+}
+
+export interface AdminOrdersDetailsSheetProps {
+  selectedOrder: AdminOrder | null;
+  setSelectedOrder: (order: AdminOrder | null) => void;
+  profiles: ProfileMap;
+  getStatusBadge: (status: string) => React.ReactNode;
+}
+
 export type { checkoutSchemaType } from "@/lib/validation/checkout";
