@@ -1,18 +1,19 @@
 import { PackageCheck, Package, DollarSign, Clock } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
 
+interface AdminOrdersMetricsProps{
+  ordersLength: number;
+  totalRevenue: number;
+  pendingCount: number;
+  deliveredCount: number;
+}
 
 export default function AdminOrdersMetrics({
   ordersLength,
   totalRevenue,
   pendingCount,
   deliveredCount,
-}:{
-  ordersLength: number;
-  totalRevenue: number;
-  pendingCount: number;
-  deliveredCount: number;
-}) {
+}: AdminOrdersMetricsProps) {
   return (
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

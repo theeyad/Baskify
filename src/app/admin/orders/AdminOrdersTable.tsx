@@ -28,6 +28,13 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import {
   MoreHorizontal,
@@ -371,18 +378,27 @@ export default function AdminOrdersTable({
             {/* Pagination Controls & Rows Per Page */}
             <div className="flex items-center gap-4">
               {/* Rows Per Page Selector */}
-              <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+              <div className="flex items-center gap-1.5 text-xs">
                 <span>Rows per page:</span>
-                <select
-                  value={itemsPerPage}
-                  onChange={(e) => setItemsPerPage(Number(e.target.value))}
-                  className="bg-background border border-input rounded-md px-2 py-1 text-xs outline-none focus:border-muted cursor-default"
+                <Select
+                  value={String(itemsPerPage)}
+                  onValueChange={(val) => setItemsPerPage(Number(val))}
                 >
-                  <option value={5}>5</option>
-                  <option value={10}>10</option>
-                  <option value={20}>20</option>
-                  <option value={50}>50</option>
-                </select>
+                  <SelectTrigger className="h-8 w-16 text-xs cursor-default">
+                    <SelectValue>{itemsPerPage}</SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    {[5, 10, 20, 50].map((num) => (
+                      <SelectItem
+                        key={num}
+                        value={String(num)}
+                        label={String(num)}
+                      >
+                        {num}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               {/* shadcn Pagination */}
