@@ -4,7 +4,7 @@ import { createStaticClient } from "@/lib/supabase/static";
 export const revalidate = 3600; // Revalidate sitemap every hour
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://baskify.com";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
   const supabase = createStaticClient();
 
   // Static core routes

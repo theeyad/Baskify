@@ -91,7 +91,7 @@ export default async function CategoryProductsPage({
     .eq("is_active", true)
     .order("created_at", { ascending: false });
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://baskify.com";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
   const collectionSchema = {
     "@context": "https://schema.org",

@@ -109,7 +109,7 @@ export default async function ProductDetailsPage({
     .eq("is_active", true)
     .limit(4);
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://baskify.com";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
   const productImages = (product.product_images || []).map(
     (img: { url: string }) => img.url
   );
