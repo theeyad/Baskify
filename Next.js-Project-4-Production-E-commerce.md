@@ -926,9 +926,10 @@ Build in this order — each phase is testable before moving to the next:
 9. **Order history** — customer orders page + detail -> Done
 10. **Admin — Orders** — view all orders, update status -> Done
 11. **Admin — Dashboard** — stats overview -> Done
-12. **GSAP animations** — add last, after all functionality works
-13. **Polish + SEO** — metadata, OG images, loading skeletons
-14. **Deploy** — Vercel + webhook URL + env vars
+12. **Polish + SEO** — metadata, OG images, loading skeletons -> Done
+13. **next-intl** — add language
+14. **GSAP animations** — add last, after all functionality works
+15. **Deploy** — Vercel + webhook URL + env vars
 
 ---
 

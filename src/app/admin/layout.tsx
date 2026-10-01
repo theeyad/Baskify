@@ -1,7 +1,19 @@
+import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { AppSidebar } from "@/components/shared/AppSidebar";
 import { SiteHeader } from "@/components/shared/SiteHeader";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+
+export const metadata: Metadata = {
+  title: {
+    template: "%s | Baskify Admin",
+    default: "Dashboard | Baskify Admin",
+  },
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default async function AdminLayout({
   children,

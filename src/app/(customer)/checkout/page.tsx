@@ -1,5 +1,15 @@
+import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { CheckoutClient } from "@/app/(customer)/checkout/CheckoutClient";
+
+export const metadata: Metadata = {
+  title: "Secure Checkout",
+  description: "Complete your order safely and securely on Baskify.",
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default async function CustomerCheckoutPage() {
   const supabase = await createClient();

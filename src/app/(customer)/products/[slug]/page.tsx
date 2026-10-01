@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import type { Metadata } from "next";
 import { createStaticClient } from "@/lib/supabase/static";
 import { notFound } from "next/navigation";
 import { productsType } from "@/lib/validation/types";
@@ -21,6 +22,57 @@ export async function generateStaticParams() {
     .select("slug")
     .eq("is_active", true);
   return (products || []).map((prod) => ({ slug: prod.slug }));
+}
+
+export async function generateMetadata({
+  params,
+}: ProductDetailsPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const supabase = createStaticClient();
+  const { data: product } = await supabase
+    .from("products")
+    .select(`
+      name,
+      description,
+      product_images ( url, is_primary )
+    `)
+    .eq("slug", slug)
+    .single();
+
+  if (!product) {
+    return {
+      title: "Product Not Found",
+      description: "The requested product could not be found.",
+    };
+  }
+
+  const primaryImage =
+    product.product_images?.find(
+      (img: { is_primary: boolean; url: string }) => img.is_primary
+    )?.url || product.product_images?.[0]?.url;
+
+  return {
+    title: product.name,
+    description:
+      product.description ||
+      `Buy ${product.name} at Baskify. High quality, great deals, and fast shipping.`,
+    openGraph: {
+      title: product.name,
+      description:
+        product.description ||
+        `Buy ${product.name} at Baskify. High quality, great deals, and fast shipping.`,
+      images: primaryImage ? [{ url: primaryImage, alt: product.name }] : [],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: product.name,
+      description:
+        product.description ||
+        `Buy ${product.name} at Baskify. High quality, great deals, and fast shipping.`,
+      images: primaryImage ? [primaryImage] : [],
+    },
+  };
 }
 
 export default async function ProductDetailsPage({
@@ -57,8 +109,126 @@ export default async function ProductDetailsPage({
     .eq("is_active", true)
     .limit(4);
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://baskify.com";
+  const productImages = (product.product_images || []).map(
+    (img: { url: string }) => img.url
+  );
+  const primaryImage =
+    product.product_images?.find(
+      (img: { is_primary: boolean; url: string }) => img.is_primary
+    )?.url || productImages[0];
+
+  const productSchema = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    description: product.description || `Buy ${product.name} on Baskify.`,
+    image: productImages.length > 0 ? productImages : primaryImage ? [primaryImage] : [],
+    sku: product.slug,
+    brand: {
+      "@type": "Brand",
+      name: "Baskify",
+    },
+    category: product.categories?.name,
+    offers: {
+      "@type": "Offer",
+      url: `${siteUrl}/products/${product.slug}`,
+      priceCurrency: "USD",
+      price: Number(product.price).toFixed(2),
+      availability:
+        product.stock > 0
+          ? "https://schema.org/InStock"
+          : "https://schema.org/OutOfStock",
+      itemCondition: "https://schema.org/NewCondition",
+      seller: {
+        "@type": "Organization",
+        name: "Baskify",
+      },
+      hasMerchantReturnPolicy: {
+        "@type": "MerchantReturnPolicy",
+        applicableCountry: "US",
+        returnPolicyCategory:
+          "https://schema.org/MerchantReturnFiniteReturnWindow",
+        merchantReturnDays: 30,
+        returnMethod: "https://schema.org/ReturnByMail",
+        returnFees: "https://schema.org/FreeReturn",
+      },
+      shippingDetails: {
+        "@type": "OfferShippingDetails",
+        shippingRate: {
+          "@type": "MonetaryAmount",
+          value: Number(product.price) >= 100 ? "0.00" : "15.00",
+          currency: "USD",
+        },
+        deliveryTime: {
+          "@type": "ShippingDeliveryTime",
+          handlingTime: {
+            "@type": "QuantitativeValue",
+            minValue: 1,
+            maxValue: 2,
+            unitCode: "DAY",
+          },
+          transitTime: {
+            "@type": "QuantitativeValue",
+            minValue: 3,
+            maxValue: 5,
+            unitCode: "DAY",
+          },
+        },
+      },
+    },
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: siteUrl,
+      },
+      ...(product.categories
+        ? [
+            {
+              "@type": "ListItem",
+              position: 2,
+              name: product.categories.name,
+              item: `${siteUrl}/categories/${product.categories.slug}`,
+            },
+            {
+              "@type": "ListItem",
+              position: 3,
+              name: product.name,
+              item: `${siteUrl}/products/${product.slug}`,
+            },
+          ]
+        : [
+            {
+              "@type": "ListItem",
+              position: 2,
+              name: product.name,
+              item: `${siteUrl}/products/${product.slug}`,
+            },
+          ]),
+    ],
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(productSchema),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbSchema),
+        }}
+      />
       {/* Product Top Grid (Gallery + Information) */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
         {/* Left: Gallery */}

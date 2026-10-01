@@ -1,6 +1,11 @@
+import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import AdminOrdersComponent from "@/app/admin/orders/AdminOrdersComponent";
 import { AdminOrder, ProfileMap } from "@/lib/validation/types";
+
+export const metadata: Metadata = {
+  title: "Orders",
+};
 
 export default async function AdminOrdersPage() {
   const supabase = await createClient();

@@ -1,7 +1,17 @@
+import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { ProfileViewCard } from "@/components/shared/ProfileViewCard";
 import { profileType, orderType } from "@/lib/validation/types";
+
+export const metadata: Metadata = {
+  title: "My Account",
+  description: "Manage your personal profile, addresses, and account details on Baskify.",
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default async function CustomerProfilePage() {
   const supabase = await createClient();

@@ -1,10 +1,17 @@
 import Link from "next/link";
 import Image from "next/image";
+import type { Metadata } from "next";
 import { createStaticClient } from "@/lib/supabase/static";
 import { productsType } from "@/lib/validation/types";
 import { formatCurrency } from "@/lib/utils";
 import { SlidersHorizontal } from "lucide-react";
 import { AddToCartButton } from "@/components/shared/AddToCartButton";
+
+export const metadata: Metadata = {
+  title: "All Products",
+  description:
+    "Explore our complete collection of top-rated products, exclusive deals, and fast shipping on Baskify.",
+};
 
 interface CustomerProductsPageProps {
   searchParams: Promise<{

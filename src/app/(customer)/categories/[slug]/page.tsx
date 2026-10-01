@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import type { Metadata } from "next";
 import { createStaticClient } from "@/lib/supabase/static";
 import { notFound } from "next/navigation";
 import { productsType } from "@/lib/validation/types";
@@ -17,6 +18,48 @@ export async function generateStaticParams() {
   const supabase = createStaticClient();
   const { data: categories } = await supabase.from("categories").select("slug");
   return (categories || []).map((cat) => ({ slug: cat.slug }));
+}
+
+export async function generateMetadata({
+  params,
+}: CategoryProductsPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const supabase = createStaticClient();
+  const { data: category } = await supabase
+    .from("categories")
+    .select("name, description, image_url")
+    .eq("slug", slug)
+    .single();
+
+  if (!category) {
+    return {
+      title: "Category Not Found",
+      description: "The requested category could not be found.",
+    };
+  }
+
+  return {
+    title: category.name,
+    description:
+      category.description ||
+      `Explore premium ${category.name} on Baskify. Top quality and fast shipping.`,
+    openGraph: {
+      title: category.name,
+      description:
+        category.description ||
+        `Explore premium ${category.name} on Baskify. Top quality and fast shipping.`,
+      images: category.image_url ? [{ url: category.image_url, alt: category.name }] : [],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: category.name,
+      description:
+        category.description ||
+        `Explore premium ${category.name} on Baskify.`,
+      images: category.image_url ? [category.image_url] : [],
+    },
+  };
 }
 
 export default async function CategoryProductsPage({
@@ -48,8 +91,68 @@ export default async function CategoryProductsPage({
     .eq("is_active", true)
     .order("created_at", { ascending: false });
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://baskify.com";
+
+  const collectionSchema = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: `${category.name} Collection`,
+    description:
+      category.description ||
+      `Explore premium ${category.name} on Baskify. Top quality and fast shipping.`,
+    url: `${siteUrl}/categories/${category.slug}`,
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: (products || []).map(
+        (prod: { name: string; slug: string }, index: number) => ({
+          "@type": "ListItem",
+          position: index + 1,
+          url: `${siteUrl}/products/${prod.slug}`,
+          name: prod.name,
+        })
+      ),
+    },
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: siteUrl,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Categories",
+        item: `${siteUrl}/categories`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: category.name,
+        item: `${siteUrl}/categories/${category.slug}`,
+      },
+    ],
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-10">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(collectionSchema),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbSchema),
+        }}
+      />
       {/* Category Banner */}
       <div className="relative rounded-3xl overflow-hidden border border-border bg-sidebar p-8 sm:p-12">
         {category.image_url && (

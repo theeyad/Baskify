@@ -1,6 +1,13 @@
 import Link from "next/link";
 import Image from "next/image";
+import type { Metadata } from "next";
 import { createStaticClient } from "@/lib/supabase/static";
+
+export const metadata: Metadata = {
+  title: "Categories",
+  description:
+    "Browse our full list of curated categories and discover your favorite products on Baskify.",
+};
 
 export const revalidate = 60;
 

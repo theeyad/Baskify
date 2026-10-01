@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { orderType } from "@/lib/validation/types";
@@ -5,6 +6,15 @@ import { ShoppingBag, Package } from "lucide-react";
 import { formatDate, formatCurrency } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Your Orders",
+  description: "View and track your previous purchases on Baskify.",
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default async function OrdersPage() {
   const supabase = await createClient();

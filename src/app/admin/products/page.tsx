@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import {
   Card,
@@ -12,6 +13,10 @@ import { TbEditFilled } from "react-icons/tb";
 import { DeleteProductButton } from "@/app/admin/products/DeleteProductButton";
 import { productsType } from "@/lib/validation/types";
 import { formatCurrency } from "@/lib/utils";
+
+export const metadata: Metadata = {
+  title: "Products",
+};
 
 export default async function AdminProductsPage() {
   const supabase = await createClient();

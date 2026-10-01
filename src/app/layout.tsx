@@ -17,9 +17,89 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://baskify.com";
+
 export const metadata: Metadata = {
-  title: "Baskify",
-  description: "E-commerce platform for all your needs",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "Baskify — Modern E-Commerce Platform",
+    template: "%s | Baskify",
+  },
+  description:
+    "Discover a curated selection of premium electronics, fashion, and lifestyle products with lightning-fast delivery and secure checkout.",
+  keywords: [
+    "e-commerce",
+    "online store",
+    "Baskify",
+    "electronics",
+    "fashion",
+    "shopping",
+    "deals",
+  ],
+  authors: [{ name: "Eyad Othman" }],
+  creator: "Eyad Othman",
+  publisher: "Eyad Othman",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: siteUrl,
+    siteName: "Baskify",
+    title: "Baskify — Modern E-Commerce Platform",
+    description:
+      "Discover a curated selection of premium electronics, fashion, and lifestyle products with lightning-fast delivery and secure checkout.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Baskify — Modern E-Commerce Platform",
+    description:
+      "Discover a curated selection of premium electronics, fashion, and lifestyle products with lightning-fast delivery and secure checkout.",
+    creator: "@baskify",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+};
+
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "OnlineStore",
+  "@id": `${siteUrl}/#organization`,
+  name: "Baskify",
+  url: siteUrl,
+  logo: `${siteUrl}/icon.png`,
+  description:
+    "Discover a curated selection of premium electronics, fashion, and lifestyle products with lightning-fast delivery and secure checkout.",
+  currenciesAccepted: "USD",
+  paymentAccepted: "Credit Card, Stripe",
+};
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": `${siteUrl}/#website`,
+  name: "Baskify",
+  url: siteUrl,
+  potentialAction: {
+    "@type": "SearchAction",
+    target: {
+      "@type": "EntryPoint",
+      urlTemplate: `${siteUrl}/products?q={search_term_string}`,
+    },
+    "query-input": "required name=search_term_string",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -36,6 +116,18 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       )}
     >
       <body className="min-h-full flex flex-col">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationSchema),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(websiteSchema),
+          }}
+        />
         <QueryProvider>
           {children}
           <Toaster />
