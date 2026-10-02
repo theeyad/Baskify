@@ -154,7 +154,7 @@ export default async function CategoryProductsPage({
         }}
       />
       {/* Category Banner */}
-      <div className="relative rounded-3xl overflow-hidden border border-border bg-sidebar p-8 sm:p-12">
+      <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden border border-border bg-sidebar p-6 sm:p-12">
         {category.image_url && (
           <div className="absolute inset-0 opacity-20">
             <Image
@@ -165,15 +165,15 @@ export default async function CategoryProductsPage({
             />
           </div>
         )}
-        <div className="relative z-10 max-w-2xl space-y-3">
+        <div className="relative z-10 max-w-2xl space-y-2 sm:space-y-3 text-center sm:text-left mx-auto sm:mx-0">
           <span className="text-xs font-semibold uppercase tracking-wider text-primary">
             Category
           </span>
-          <h1 className="text-3xl sm:text-4xl font-heading font-extrabold text-foreground tracking-tight">
+          <h1 className="text-2xl sm:text-4xl font-heading font-extrabold text-foreground tracking-tight">
             {category.name}
           </h1>
           {category.description && (
-            <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+            <p className="text-xs sm:text-base text-muted-foreground leading-relaxed max-w-xl mx-auto sm:mx-0">
               {category.description}
             </p>
           )}
@@ -182,7 +182,7 @@ export default async function CategoryProductsPage({
 
       {/* Products Grid */}
       <div>
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex flex-col sm:flex-row items-center justify-between mb-6 gap-2 text-center sm:text-left">
           <h2 className="text-xl font-heading font-bold text-foreground">
             Products ({products?.length || 0})
           </h2>

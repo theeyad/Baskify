@@ -63,7 +63,7 @@ export default function ForgotPasswordForm() {
               id="email"
               {...register("email")}
               type="email"
-              className="w-full outline-0 border border-input shadow-sm rounded-lg px-3 py-2 text-sm focus:outline-3 focus:border-muted transition-all duration-150"
+              className="w-full outline-0 border border-input shadow-sm rounded-lg px-3 py-2 text-base md:text-sm focus:outline-3 focus:border-muted transition-all duration-150"
               onFocus={() => setShowSuccess(false)}
             />
             {errors.email && <FieldError>{errors.email.message}</FieldError>}

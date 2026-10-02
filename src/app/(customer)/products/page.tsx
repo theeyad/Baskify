@@ -83,11 +83,11 @@ export default async function CustomerProductsPage({
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
       {/* Page Header */}
-      <div>
-        <h1 className="text-3xl font-heading font-extrabold text-foreground tracking-tight">
+      <div className="text-center sm:text-left">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-heading font-extrabold text-foreground tracking-tight">
           All Products
         </h1>
-        <p className="text-sm text-muted-foreground mt-1">
+        <p className="text-xs sm:text-sm text-muted-foreground mt-1 max-w-xl mx-auto sm:mx-0">
           Explore our complete collection of high-quality products.
         </p>
       </div>

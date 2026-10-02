@@ -117,7 +117,7 @@ export default function NavSearch() {
   return (
     <div ref={containerRef} className="relative flex-1 max-w-sm">
       {/* Search Input Bar */}
-      <div className="relative flex items-center">
+      <div className="relative flex items-center mt-2">
         <Search className="w-4 h-4 absolute left-3.5 text-muted-foreground pointer-events-none" />
         <input
           type="text"
@@ -128,7 +128,7 @@ export default function NavSearch() {
           }}
           onKeyDown={handleKeyDown}
           placeholder="Search products..."
-          className="w-full bg-sidebar border border-input rounded-full pl-9 pr-9 py-1.5 text-xs text-foreground outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all"
+          className="w-full bg-sidebar border border-input rounded-full pl-9 pr-9 py-2 sm:py-1.5 text-base sm:text-xs text-foreground outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all"
         />
         {searchTerm.length > 0 && (
           <button

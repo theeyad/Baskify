@@ -34,49 +34,37 @@ export default async function Home() {
   return (
     <div className="space-y-16 pb-12">
       {/* HERO SECTION */}
-      <section className="relative overflow-hidden bg-sidebar border-b border-border py-16 lg:py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-6 text-center lg:text-left">
+      <section className="relative overflow-hidden bg-sidebar border-b border-border min-h-[calc(100svh-4rem)] flex items-center py-12 lg:py-0">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="space-y-6 text-center lg:text-left max-w-2xl mx-auto lg:mx-0">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold tracking-wide">
               <span>New Season Collection</span>
             </div>
 
-            <h1 className="text-foreground font-heading font-extrabold tracking-tight text-[clamp(2rem,5vw+1rem,3.5rem)] leading-[1.1]">
+            <h1 className="text-foreground font-heading font-extrabold tracking-tight text-[clamp(2.25rem,5.5vw+1rem,3.75rem)] leading-[1.1]">
               Elevate Your Everyday Lifestyle
             </h1>
 
-            <p className="text-muted-foreground text-sm sm:text-base max-w-xl mx-auto lg:mx-0 leading-relaxed">
+            <p className="text-muted-foreground text-sm sm:text-base md:text-lg max-w-xl mx-auto lg:mx-0 leading-relaxed">
               Discover curated essentials, premium products, and exclusive deals designed for modern living. Uncompromising quality delivered to your doorstep.
             </p>
 
-            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
-              <Link href="#products" className="cursor-default">
-                <Button size="lg" className="rounded-full px-8 gap-2">
+            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+              <Link href="#products" className="w-full sm:w-auto cursor-default">
+                <Button size="lg" className="w-full sm:w-auto rounded-full px-8 gap-2">
                   <span>Shop New Arrivals</span>
                 </Button>
               </Link>
-              <Link href="#categories" className="cursor-default">
-                <Button variant="outline" size="lg" className="rounded-full px-8">
+              <Link href="#categories" className="w-full sm:w-auto cursor-default">
+                <Button variant="outline" size="lg" className="w-full sm:w-auto rounded-full px-8">
                   Browse Categories
                 </Button>
               </Link>
             </div>
-
-            {/* Quick stats / trust */}
-            <div className="pt-6 border-t border-border/60 flex items-center justify-center lg:justify-start gap-6 text-xs text-muted-foreground">
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                <span>Verified Quality</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                <span>Fast Worldwide Delivery</span>
-              </div>
-            </div>
           </div>
 
-          {/* Hero Image */}
-          <div className="relative mx-auto lg:ml-auto w-full max-w-md lg:max-w-none h-72 sm:h-96 lg:h-105 rounded-2xl overflow-hidden shadow-2xl border border-border bg-card">
+          {/* Hero Image — Hidden on mobile & tablet, visible on lg+ */}
+          <div className="hidden lg:block relative mx-auto lg:ml-auto w-full max-w-md lg:max-w-none h-72 sm:h-96 lg:h-105 rounded-2xl overflow-hidden shadow-2xl border border-border bg-card">
             <Image
               src="/hero.webp"
               alt="Baskify Featured Showcase"
@@ -84,7 +72,7 @@ export default async function Home() {
               priority
               loading="eager"
               className="object-cover"
-              sizes="(max-width: 1024px) 100vw, 50vw"
+              sizes="50vw"
             />
           </div>
         </div>
@@ -92,7 +80,7 @@ export default async function Home() {
 
       {/* FEATURED CATEGORIES SECTION */}
       <section id="categories" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4 text-center sm:text-left items-center">
           <div>
             <h2 className="text-2xl font-heading font-bold text-foreground tracking-tight">
               Shop by Category
@@ -151,7 +139,7 @@ export default async function Home() {
 
       {/* FEATURED PRODUCTS SECTION */}
       <section id="products" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4 text-center sm:text-left items-center">
           <div>
             <h2 className="text-2xl font-heading font-bold text-foreground tracking-tight">
               Featured Products

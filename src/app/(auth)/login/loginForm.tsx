@@ -71,7 +71,7 @@ export default function LoginForm() {
               id="email"
               {...register("email")}
               type="email"
-              className="w-full outline-0 border border-input shadow-sm rounded-lg px-3 py-2 text-sm focus:outline-3 focus:border-muted transition-all duration-150"
+              className="w-full outline-0 border border-input shadow-sm rounded-lg px-3 py-2 text-base md:text-sm focus:outline-3 focus:border-muted transition-all duration-150"
             />
             {errors.email && <FieldError>{errors.email.message}</FieldError>}
           </Field>
@@ -84,7 +84,7 @@ export default function LoginForm() {
               id="password"
               {...register("password")}
               type="password"
-              className="w-full outline-0 border border-input shadow-sm rounded-lg px-3 py-2 text-sm focus:outline-3 focus:border-muted transition-all duration-150"
+              className="w-full outline-0 border border-input shadow-sm rounded-lg px-3 py-2 text-base md:text-sm focus:outline-3 focus:border-muted transition-all duration-150"
             />
             {errors.password && (
               <FieldError>{errors.password.message}</FieldError>
