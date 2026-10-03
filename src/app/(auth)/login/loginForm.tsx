@@ -19,7 +19,7 @@ import {
   FieldSeparator,
 } from "@/components/ui/field";
 
-export default function LoginForm() {
+export default function LoginForm({ next }: { next?: string }) {
   const [loading, setLoading] = useState(false);
 
   const {
@@ -33,7 +33,7 @@ export default function LoginForm() {
 
   async function formSubmitHandler(values: FieldValues) {
     setLoading(true);
-    const result = await signIn(values);
+    const result = await signIn(values, next);
     if (result?.error) {
       setError("root", {
         message: result.error,
@@ -44,7 +44,7 @@ export default function LoginForm() {
 
   async function handleGoogle() {
     setLoading(true);
-    const result = await signInWithGoogle();
+    const result = await signInWithGoogle(next);
     if (result?.error) {
       setError("root", {
         message: result.error,

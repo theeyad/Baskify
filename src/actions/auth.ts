@@ -4,27 +4,75 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { FieldValues } from "react-hook-form";
 
-export async function signUp(values: FieldValues) {
+export async function signUp(values: FieldValues, next?: string) {
   const supabase = await createClient();
 
   const email = values.email;
   const password = values.password;
   const fullName = values.full_name;
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const callbackUrl = new URL("/auth/callback", siteUrl);
+  if (next && next.startsWith("/") && !next.startsWith("//")) {
+    callbackUrl.searchParams.set("next", next);
+  }
+
   const { error } = await supabase.auth.signUp({
     email,
     password,
     options: {
       data: { full_name: fullName },
+      emailRedirectTo: callbackUrl.toString(),
     },
   });
 
   if (error) return { error: error.message };
 
-  redirect("/?verified=pending");
+  return { success: true, email };
 }
 
-export async function signIn(values: FieldValues) {
+export async function verifySignupOtp({
+  email,
+  token,
+  next,
+}: {
+  email: string;
+  token: string;
+  next?: string;
+}) {
+  const supabase = await createClient();
+
+  const { error } = await supabase.auth.verifyOtp({
+    email,
+    token: token.trim(),
+    type: "signup",
+  });
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  const target =
+    next && next.startsWith("/") && !next.startsWith("//") ? next : "/";
+  redirect(target);
+}
+
+export async function resendSignupOtp(email: string) {
+  const supabase = await createClient();
+
+  const { error } = await supabase.auth.resend({
+    type: "signup",
+    email,
+  });
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  return { success: true };
+}
+
+export async function signIn(values: FieldValues, next?: string) {
   const supabase = await createClient();
 
   const email = values.email;
@@ -34,7 +82,9 @@ export async function signIn(values: FieldValues) {
 
   if (error) return { error: error.message };
 
-  redirect("/");
+  const target =
+    next && next.startsWith("/") && !next.startsWith("//") ? next : "/";
+  redirect(target);
 }
 
 export async function signOut() {
@@ -43,13 +93,19 @@ export async function signOut() {
   redirect("/login");
 }
 
-export async function signInWithGoogle() {
+export async function signInWithGoogle(next?: string) {
   const supabase = await createClient();
+
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const callbackUrl = new URL("/auth/callback", siteUrl);
+  if (next && next.startsWith("/") && !next.startsWith("//")) {
+    callbackUrl.searchParams.set("next", next);
+  }
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+      redirectTo: callbackUrl.toString(),
     },
   });
 

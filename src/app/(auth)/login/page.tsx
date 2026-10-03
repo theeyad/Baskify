@@ -7,16 +7,25 @@ export const metadata: Metadata = {
   description: "Login to your account",
 };
 
-export default function LoginPage() {
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ next?: string }>;
+}) {
+  const { next } = await searchParams;
+  const registerHref = next
+    ? `/register?next=${encodeURIComponent(next)}`
+    : "/register";
+
   return (
     <div className="relative overflow-hidden border bg-card shadow-md w-full mx-4 my-8 max-w-md rounded-xl p-8">
       <h1 className="text-2xl font-bold mb-6 text-center">Login</h1>
 
-      <LoginForm />
+      <LoginForm next={next} />
 
       <p className="mt-6 text-center text-sm text-primary">
         No account?{" "}
-        <Link href="/register" className="text-foreground font-medium">
+        <Link href={registerHref} className="text-foreground font-medium">
           Register
         </Link>
       </p>
