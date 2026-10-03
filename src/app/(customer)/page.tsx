@@ -4,7 +4,6 @@ import { createStaticClient } from "@/lib/supabase/static";
 import { productsType } from "@/lib/validation/types";
 import { formatCurrency } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { CheckCircle2 } from "lucide-react";
 import { AddToCartButton } from "@/components/shared/AddToCartButton";
 
 export const revalidate = 60;

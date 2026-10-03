@@ -5,7 +5,6 @@ import {
   IconList,
   IconListDetails,
   IconShoppingBag,
-  IconUsers,
 } from "@tabler/icons-react";
 
 import {

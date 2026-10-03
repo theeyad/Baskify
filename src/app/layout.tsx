@@ -71,6 +71,9 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
+  verification: {
+    google: "Jal7oTkgzUhQTWE6G_JSrZJfdbNbL0q4K64UB2uRoW8", // For Google Search Console verification
+  },
 };
 
 const organizationSchema = {
