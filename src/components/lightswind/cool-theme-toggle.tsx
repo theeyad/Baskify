@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Sun, Moon, Cloud, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTheme } from "next-themes";
 
 interface CoolThemeToggleProps {
   className?: string;
@@ -14,37 +15,17 @@ export function CoolThemeToggle({
   className,
   size = "md",
 }: CoolThemeToggleProps) {
-  const [theme, setTheme] = useState<"light" | "dark">("light");
   const [mounted, setMounted] = useState(false);
+  const { setTheme, resolvedTheme } = useTheme();
 
   useEffect(() => {
     setMounted(true);
-
-    if (localStorage.getItem("theme") === "dark") {
-      document.documentElement.classList.add("dark");
-    }
-
-    const isDark = document.documentElement.classList.contains("dark");
-    setTheme(isDark ? "dark" : "light");
-
-    // const observer = new MutationObserver(() => {
-    //   setTheme(document.documentElement.classList.contains("dark") ? "dark" : "light");
-    // });
-    // observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
-    // return () => observer.disconnect();
   }, []);
 
-  const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light";
-    setTheme(newTheme);
+  const isDark = resolvedTheme === "dark";
 
-    if (newTheme === "dark") {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-      localStorage.setItem("theme", "light");
-    }
+  const toggleTheme = () => {
+    setTheme(isDark ? "light" : "dark");
   };
 
   if (!mounted)
@@ -63,7 +44,7 @@ export function CoolThemeToggle({
       thumb: "w-4 h-4",
       icon: "w-2.5 h-2.5",
       padding: "p-1",
-      translateX: "translateX(24px)",
+      translateX: 24,
       cloudSize: "w-3 h-3",
     },
     md: {
@@ -71,7 +52,7 @@ export function CoolThemeToggle({
       thumb: "w-6 h-6",
       icon: "w-4 h-4",
       padding: "p-1",
-      translateX: "translateX(32px)",
+      translateX: 32,
       cloudSize: "w-5 h-5",
     },
     lg: {
@@ -79,7 +60,7 @@ export function CoolThemeToggle({
       thumb: "w-8 h-8",
       icon: "w-5 h-5",
       padding: "p-1",
-      translateX: "translateX(40px)",
+      translateX: 40,
       cloudSize: "w-6 h-6",
     },
   };
@@ -91,7 +72,7 @@ export function CoolThemeToggle({
       onClick={toggleTheme}
       className={cn(
         "relative rounded-full transition-colors duration-500 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 overflow-hidden",
-        theme === "dark" ? "bg-slate-900" : "bg-sky-300",
+        isDark ? "bg-slate-900" : "bg-sky-300",
         currentSize.button,
         currentSize.padding,
         className,
@@ -103,8 +84,8 @@ export function CoolThemeToggle({
         <motion.div
           initial={false}
           animate={{
-            opacity: theme === "light" ? 1 : 0,
-            y: theme === "light" ? 0 : 10,
+            opacity: !isDark ? 1 : 0,
+            y: !isDark ? 0 : 10,
           }}
           transition={{ duration: 0.4 }}
           className="absolute inset-0 flex items-center justify-end pr-2 text-white"
@@ -117,8 +98,8 @@ export function CoolThemeToggle({
         <motion.div
           initial={false}
           animate={{
-            opacity: theme === "dark" ? 1 : 0,
-            y: theme === "dark" ? 0 : -10,
+            opacity: isDark ? 1 : 0,
+            y: isDark ? 0 : -10,
           }}
           transition={{ duration: 0.4 }}
           className="absolute inset-0 flex items-center justify-start pl-2"
@@ -156,18 +137,11 @@ export function CoolThemeToggle({
         }}
         className={cn(
           "relative z-10 flex items-center justify-center rounded-full shadow-md",
-          theme === "dark" ? "bg-slate-800" : "bg-yellow-400",
+          isDark ? "bg-slate-800" : "bg-yellow-400",
           currentSize.thumb,
         )}
         animate={{
-          x:
-            theme === "dark"
-              ? parseInt(
-                  currentSize.translateX
-                    .replace("translateX(", "")
-                    .replace("px)", ""),
-                )
-              : 0,
+          x: isDark ? currentSize.translateX : 0,
         }}
       >
         <div className="relative flex items-center justify-center w-full h-full">
@@ -175,9 +149,9 @@ export function CoolThemeToggle({
           <motion.div
             initial={false}
             animate={{
-              rotate: theme === "dark" ? 180 : 0,
-              scale: theme === "dark" ? 0 : 1,
-              opacity: theme === "dark" ? 0 : 1,
+              rotate: isDark ? 180 : 0,
+              scale: isDark ? 0 : 1,
+              opacity: isDark ? 0 : 1,
             }}
             transition={{ duration: 0.4 }}
             className="absolute"
@@ -189,9 +163,9 @@ export function CoolThemeToggle({
           <motion.div
             initial={false}
             animate={{
-              rotate: theme === "dark" ? 0 : -180,
-              scale: theme === "dark" ? 1 : 0,
-              opacity: theme === "dark" ? 1 : 0,
+              rotate: isDark ? 0 : -180,
+              scale: isDark ? 1 : 0,
+              opacity: isDark ? 1 : 0,
             }}
             transition={{ duration: 0.4 }}
             className="absolute flex items-center justify-center"
